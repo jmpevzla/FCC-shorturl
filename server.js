@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const dns = require('dns')
+const dns = require('dns');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
@@ -46,10 +46,11 @@ app.post('/api/shorturl', async function(req, res) {
     })
   }
 
-  const hostUrl = String(postUrl).replace(re, '');
-  
+  const hostUrl = new URL(postUrl).host
+
   dns.lookup(hostUrl, {}, async (err) => {
     if (err) {
+      console.log(err)
       return res.json({
         error: 'invalid url'
       })
@@ -63,7 +64,7 @@ app.post('/api/shorturl', async function(req, res) {
         short_url: oldUrl.short_url
       })
     }
-    
+
     // const maxFind = await Url.find().sort({short_url:-1}).limit(1).exec();  
 
     // const short_url = maxFind.length === 0 ? 1 : maxFind[0].short_url + 1;
